@@ -1,0 +1,20 @@
+# This file collects all required third-party applications that are needed
+# to run this project. Later you can install all these apps in a row
+# using pip. Example::
+#
+#     pip install -U -r requirements.txt
+
+# Core requirements
+Django>=1.4.3,<1.6
+Markdown
+uWSGI==1.4.4
+Fabric==1.4.4
+
+git+git://github.com/cbmi/avocado.git@2.0.24
+git+git://github.com/cbmi/serrano.git@2.0.16
+git+git://github.com/cbmi/modeltree.git@1.1.7
+
+# Database Drivers, the Python stdlib has support for SQLite
+# psycopg2
+# cx_oracle
+# mysql-python

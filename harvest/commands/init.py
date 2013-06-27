@@ -12,6 +12,7 @@ __doc__ = """\
 Creates and sets up a new Harvest project.
 """
 
+CILANTRO_BUILD = 'git@github.com:tjrivera/cilantro.git -b thin-client'
 HARVEST_TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(harvest.__file__)), 'template')
 STARTPROJECT_ARGS = '--template {0} -e py,ini,gitignore,in,conf,md,sample ' \
     '-n Makefile'.format(HARVEST_TEMPLATE_PATH)
@@ -29,6 +30,7 @@ def parser(options):
     create_env = options.create_env
     allow_input = options.allow_input
     verbose = options.verbose
+    dev = options.dev
 
     if not valid_name(project_name):
         print(red("Error: The project name '{0}' must be a valid Python "
@@ -64,7 +66,7 @@ def parser(options):
     @virtualenv(full_env_path)
     def install_django():
         print(green('- Installing Django'))
-        local('pip install "django>=1.4,<1.5"')
+        local('pip install "django>=1.4,<1.6"')
 
     @virtualenv(full_env_path)
     def create_project(project_name):
@@ -72,9 +74,38 @@ def parser(options):
         local('django-admin.py startproject {0} {1}'.format(STARTPROJECT_ARGS, project_name))
 
     @virtualenv(full_env_path)
+    def set_requirements():
+        if dev:
+            local('mv requirements_dev.txt requirements.txt')
+        else:
+            local('mv requirements_prod.txt requirements.txt')
+
+    @virtualenv(full_env_path)
     def install_deps():
         print(green('- Downloading and installing dependencies'))
         local('pip install -r requirements.txt')
+
+    @virtualenv(full_env_path)
+    def build_cilantro(project_name):
+        print(green('- Building Cilantro'))
+        local('git clone %s' % CILANTRO_BUILD)
+        os.chdir('cilantro')
+        local('npm install')
+        local('grunt buildDist')
+        local('cp -r dist/src/ ../%s/static/cilantro/js/ ' % project_name)
+        local('cp -r css/ ../%s/static/cilantro/css/ ' % project_name)
+        local('cp -r img/ ../%s/static/cilantro/img/ ' % project_name)
+        local('cp -r font/ ../%s/static/cilantro/font/ ' % project_name)
+        os.chdir('..')
+        local('rm -rf cilantro')
+
+    @virtualenv(full_env_path)
+    def compile_coffee():
+        local('make coffee')
+
+    @virtualenv(full_env_path)
+    def compile_sass():
+        local('make sass')
 
     @virtualenv(full_env_path)
     def collect_static():
@@ -104,7 +135,19 @@ def parser(options):
         managepy_chmod()
 
     with hide('running'):
+        # Setup requirements file according to dev flag
+        set_requirements()
+        # Install Dependencies
         install_deps()
+
+    with hide(*hidden_output):
+        build_cilantro(project_name)
+
+    with hide(*hidden_output):
+        compile_coffee()
+
+    with hide(*hidden_output):
+        compile_sass()
 
     with hide(*hidden_output):
         collect_static()
@@ -137,3 +180,6 @@ parser.add_argument('--no-env', action='store_false', dest='create_env',
         'current directory.')
 parser.add_argument('--no-input', action='store_false', dest='allow_input',
     help='Prevents interactive prompts during setup.')
+parser.add_argument('--dev', action='store_true', dest='dev',
+    help='Builds Harvest with the latest source distributions of the stack.')
+
