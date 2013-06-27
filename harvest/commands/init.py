@@ -12,7 +12,7 @@ __doc__ = """\
 Creates and sets up a new Harvest project.
 """
 
-CILANTRO_BUILD = 'git@github.com:cbmi/cilantro.git -b thin-client'
+CILANTRO_BUILD = 'https://github.com/cbmi/cilantro.git -b thin-client'
 HARVEST_TEMPLATE_PATH = os.path.join(os.path.abspath(os.path.dirname(harvest.__file__)), 'template')
 STARTPROJECT_ARGS = '--template {0} -e py,ini,gitignore,in,conf,md,sample ' \
     '-n Makefile'.format(HARVEST_TEMPLATE_PATH)
