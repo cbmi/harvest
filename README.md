@@ -8,6 +8,10 @@ $ pip install harvest
 
 ## Harvest CLI
 
+### Dependencies
+
+This version of Harvest requires Python 2.7 as well as node and npm (to build Cilantro).
+
 ### Start A New Project
 
 ```bash
@@ -34,6 +38,9 @@ installed in the correct site-packages directory.
 `--no-input` - Pass to prevent being prompted during the setup. This
 currently includes the prompt for setting up a superuser during the database
 sync. This is primarily useful for performing scripted builds.
+
+`--dev` - Pass to build Harvest with the latest source distributions of the 
+dependencies as they exist on Github. 
 
 
 This command performs the following steps:
