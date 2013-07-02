@@ -140,14 +140,15 @@ def parser(options):
         # Install Dependencies
         install_deps()
 
-    with hide(*hidden_output):
-        build_cilantro(project_name)
+    # Build Cilantro from source
+    # with hide(*hidden_output):
+    #     build_cilantro(project_name)
 
-    with hide(*hidden_output):
-        compile_coffee()
+    # with hide(*hidden_output):
+    #     compile_coffee()
 
-    with hide(*hidden_output):
-        compile_sass()
+    # with hide(*hidden_output):
+    #     compile_sass()
 
     with hide(*hidden_output):
         collect_static()
