@@ -68,13 +68,6 @@ $ uwsgi --ini server/uwsgi/local.ini --protocol http --socket 127.0.0.1:8000 --c
     - `local_settings.py` for environment-specific settings (not versioned)
     - `settings.py` for bringing them together and post-setup
 - `local_settings.py.sample` template
-- a clean static directory for large Web app development
-- wicked hot Makefile for watching static files pre-processors:
-    - `make watch`
-    - CoffeeScript (requires Node and CoffeeScript)
-    - SCSS (requires Ruby and Sass)
-    - compiles scss => css
-    - compiles coffee => javascript/src
 - integration with [r.js](https://github.com/jrburke/r.js/)
     - `make optimize`
     - includes `app.build.js` file for single-file JavaScript optimization
@@ -88,20 +81,6 @@ $ uwsgi --ini server/uwsgi/local.ini --protocol http --socket 127.0.0.1:8000 --c
 ## Dependencies
 
 - Python 2.7 (because that's how I roll)
-- Ruby
-- Node
-- Ruby Sass gem
-- Node CoffeeScript module
-
-## Makefile Commands
-
-- `build` - builds and initializes all submodules, compiles SCSS and
-    CoffeeScript and optimizes JavaScript
-- `watch` - watches the CoffeeScript and SCSS files in the background
-for changes and automatically recompiles the files
-- `unwatch` - stops watching the CoffeeScript and SCSS files
-- `sass` - one-time explicit recompilation of SCSS files
-- `coffee` - one-time explicit recompilation of CoffeeScript files
 
 ## Fabfile Commands
 
@@ -118,46 +97,4 @@ passwords, the `SECRET_KEY` and other information that should not be in version
 control. Defining `local_settings.py` is not mandatory but will warn if it does
 not exist.
 
-## CoffeeScript/JavaScript Development
 
-Ensure Node, NPM and CoffeeScript are installed:
-
-```bash
-$ npm install coffee-script -g
-```
-
-CoffeeScript is lovely. The flow is simple:
-
-- write some CoffeeScript which automatically gets compiled in JavaScript
-(by doing `make watch`)
-- when ready to test non-`DEBUG` mode, run `make optimize`
-
-The `app.build.js` file will need to be updated to define which modules
-should be compiled to single files. It is recommended to take a tiered
-approach to reduce overall file size across pages and increase cache potential
-for libraries that won't change for a while, for example jQuery.
-
-## SCSS Development
-
-Ensure Ruby and the Sass gem are installed:
-
-```bash
-$ gem install sass
-```
-
-[Sass](http://sass-lang.com/) is awesome. SCSS is a superset of CSS so you can
-use as much or as little SCSS syntax as you want. It is recommended to write
-all of your CSS rules as SCSS, since at the very least the Sass minifier can
-be taken advantage of.
-
-Execute the following commands to begin watching the static files and
-collect the files (using Django's collectstatic command):
-
-```bash
-$ make sass coffee watch collect
-```
-
-_Note, the `sass` and `coffee` targets are called first to ensure the compiled
-files exist before attempting to collect them. Just running `watch` spawns
-background processes and may result in a race condition with the `collect`
-command._
