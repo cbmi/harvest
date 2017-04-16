@@ -23,6 +23,12 @@
     - Custom query interface
     - Custom output
 
+[Harvest](http://harvest.research.chop.edu) is a [Django](https://www.djangoproject.com/)-based Python and Javascript toolkit for building web applications to integrate, explore, and report on data.  Harvest makes it easy to [bootstrap from your relational tables](http://harvest.research.chop.edu/articles/2013/11/20/using-your-data/) to a Django app with a simple query-builder and reporting interface that automatically uses the relations between your data models.
+
+## Support
+
+If you encounter problems getting started with Harvest, try our [chatroom](http://harvest.research.chop.edu/chat/) or our [Google Group](https://groups.google.com/forum/#!forum/harveststack).
+
 ## Install
 
 ```bash
